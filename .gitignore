@@ -1,0 +1,17 @@
+# Virtual environment
+.venv/
+
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Data outputs
+output/
+Data/processed/
+
+# IDE files (VS Code, Sublime, etc.)
+.vscode/
+*.sublime-project
+*.sublime-workspace
