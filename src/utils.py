@@ -3,10 +3,25 @@ import os
 import pickle
 import pandas as pd
 import numpy as np
-from sentence_transformers import SentenceTransformer
+_model = None
 
-# Load the model once (lightweight and fast)
-model = SentenceTransformer('all-MiniLM-L6-v2')
+
+def get_model():
+    """Lazy-load and return the SentenceTransformer model.
+
+    This avoids importing / loading the model at module import time which
+    makes running fast unit tests or CI faster. Tests can patch `get_model`.
+    """
+    global _model
+    if _model is None:
+        try:
+            from sentence_transformers import SentenceTransformer
+        except Exception as e:
+            raise ImportError(
+                "The package `sentence_transformers` is required to use embeddings."
+            ) from e
+        _model = SentenceTransformer('all-MiniLM-L6-v2')
+    return _model
 
 # Paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -30,6 +45,7 @@ def embed_texts(texts, cache_file=EMBEDDINGS_FILE):
         with open(cache_file, "rb") as f:
             return pickle.load(f)
 
+    model = get_model()
     embeddings = model.encode(texts)
 
     # Save to cache
@@ -48,6 +64,7 @@ def semantic_search(df, query, top_k=3):
     combined_texts = df['title'] + ". " + df['abstract']
     embeddings = embed_texts(combined_texts.tolist())  # cached
 
+    model = get_model()
     query_embedding = model.encode([query])[0]  # query is small, no need to cache
     sims = np.dot(embeddings, query_embedding) / (
         np.linalg.norm(embeddings, axis=1) * np.linalg.norm(query_embedding)
