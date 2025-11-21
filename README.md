@@ -29,6 +29,14 @@ Notes
 - Embeddings are cached at `Data/processed/embeddings.pkl`. Remove that file to force re-embedding.
 - See `.github/copilot-instructions.md` and `AGENT.md` for contributor and AI agent guidance.
 
+Demo screenshot
+
+![Demo screenshot](./docs/demo_screenshot.svg)
+
+Architecture
+
+![Architecture diagram](./docs/architecture.svg)
+
 Web UI (optional)
 
 You can run a small Streamlit app included at `src/web_app.py`:
