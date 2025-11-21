@@ -1,2 +1,4 @@
-# mini-deep-research-agent
-Python-based NLP project showcasing summarization, classification, and automation of scientific abstracts.
+# Deep Research Agent
+
+A modular Python project for loading research paper datasets, generating embeddings, performing semantic search, and summarizing top results.
+
