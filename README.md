@@ -33,6 +33,10 @@ Demo screenshot
 
 ![Demo screenshot](./docs/demo_screenshot.svg)
 
+Replace with real screenshot/GIF
+
+If you'd like to replace the placeholder demo image with a real screenshot or GIF, capture your demo as `docs/demo_screenshot.png` or `docs/demo_screenshot.gif` and commit it. For detailed instructions see `docs/screenshot_instructions.md`.
+
 Architecture
 
 ![Architecture diagram](./docs/architecture.svg)
