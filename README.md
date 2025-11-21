@@ -1,5 +1,4 @@
 # Deep Research Agent
 
-A modular template for collecting, analysing, and experimenting with research papers and data.
-.gitkeep
-.gitkeep
+A modular Python project for loading research paper datasets, generating embeddings, performing semantic search, and summarizing top results.
+
