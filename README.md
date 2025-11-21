@@ -29,3 +29,29 @@ Notes
 - Embeddings are cached at `Data/processed/embeddings.pkl`. Remove that file to force re-embedding.
 - See `.github/copilot-instructions.md` and `AGENT.md` for contributor and AI agent guidance.
 
+Web UI (optional)
+
+You can run a small Streamlit app included at `src/web_app.py`:
+
+```
+streamlit run src/web_app.py
+```
+
+Sample console output (from `mini-deep-research-agent/src/main.py`):
+
+```
+=== 🚀 Deep Research Agent — Multi‑Query Mode ===
+
+================================================================================
+ 🔍 Processing Query: machine learning
+================================================================================
+
+--------------------------------------------------------------------------------
+Title: Deep Learning Basics
+Abstract Preview: An introduction to deep learning concepts....
+Authors: Alice Smith; Bob Jones
+--------------------------------------------------------------------------------
+
+📁 Results saved to: output/multi_query_results.json
+```
+
