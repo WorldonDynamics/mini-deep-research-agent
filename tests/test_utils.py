@@ -25,8 +25,8 @@ class UtilsTest(unittest.TestCase):
         ])
 
     @patch.object(utils_mod, "embed_texts")
-    @patch.object(utils_mod, "model")
-    def test_semantic_search_with_mocked_embeddings(self, mock_model, mock_embed_texts):
+    @patch.object(utils_mod, "get_model")
+    def test_semantic_search_with_mocked_embeddings(self, mock_get_model, mock_embed_texts):
         # Mock embed_texts to return deterministic embeddings
         # 3 documents -> 3 embeddings of dimension 2
         mock_embed_texts.return_value = np.array([
@@ -35,8 +35,9 @@ class UtilsTest(unittest.TestCase):
             [0.7, 0.7],
         ])
 
-        # Mock model.encode for query to produce an embedding similar to doc 3
-        mock_model.encode.return_value = np.array([[0.7, 0.7]])
+        # Mock get_model().encode for query to produce an embedding similar to doc 3
+        mock_model_instance = mock_get_model.return_value
+        mock_model_instance.encode.return_value = np.array([[0.7, 0.7]])
 
         top = utils_mod.semantic_search(self.df, "test query", top_k=2)
 

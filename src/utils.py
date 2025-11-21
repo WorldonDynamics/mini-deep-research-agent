@@ -3,13 +3,27 @@ import os
 import pickle
 import pandas as pd
 import numpy as np
-from sentence_transformers import SentenceTransformer
 
-# -------------------------
-# Model Initialization
-# -------------------------
-# Lightweight, fast model for semantic embeddings
-model = SentenceTransformer('all-MiniLM-L6-v2')
+_model = None
+
+
+def get_model():
+    """Lazy-load and return the SentenceTransformer model.
+
+    Loading the model at import time makes test execution and small scripts
+    slow. Use this lazy loader so tests can patch `get_model` and CI can
+    run quickly without importing heavy dependencies until needed.
+    """
+    global _model
+    if _model is None:
+        try:
+            from sentence_transformers import SentenceTransformer
+        except Exception as e:
+            raise ImportError(
+                "The package `sentence_transformers` is required to use embeddings."
+            ) from e
+        _model = SentenceTransformer('all-MiniLM-L6-v2')
+    return _model
 
 
 # -------------------------
@@ -37,6 +51,7 @@ def embed_texts(texts, cache_file="../Data/processed/embeddings.pkl"):
         with open(cache_file, "rb") as f:
             return pickle.load(f)
     
+    model = get_model()
     embeddings = model.encode(texts)
     
     # Ensure directory exists for cache
@@ -62,6 +77,7 @@ def semantic_search(df, query, top_k=3):
     embeddings = embed_texts(combined_texts.tolist())
     
     # Embed query (small, no cache)
+    model = get_model()
     query_embedding = model.encode([query])[0]
     
     # Compute cosine similarity
