@@ -1,4 +1,5 @@
 import json
+import os
 from utils import load_data, semantic_search, summarize_papers
 
 def run_queries(queries):
@@ -24,6 +25,13 @@ def run_queries(queries):
 
 
 def main():
+    # Get the folder where this script lives
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Ensure output folder exists relative to script
+    output_dir = os.path.join(script_dir, "output")
+    os.makedirs(output_dir, exist_ok=True)
+
     # 🟦 Add / modify queries here
     queries = [
         "machine learning",
@@ -37,13 +45,13 @@ def main():
     results = run_queries(queries)
 
     # Save output for later
-    with open("output/multi_query_results.json", "w", encoding="utf-8") as f:
+    output_path = os.path.join(output_dir, "multi_query_results.json")
+    with open(output_path, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=4, ensure_ascii=False)
 
-    print("\n\n📁 Results saved to: output/multi_query_results.json")
+    print(f"\n\n📁 Results saved to: {output_path}")
     print("✨ Done!\n")
 
 
 if __name__ == "__main__":
     main()
-python src/main.py
