@@ -1,57 +1,75 @@
-import json
 import os
-from utils import load_data, semantic_search, summarize_papers
+import torch
+from torch.utils.data import Dataset, DataLoader
+import pandas as pd
+from sklearn.model_selection import train_test_split
 
-def run_queries(queries):
-    df = load_data()
-    results = {}
+# -------------------------------
+# Device setup
+# -------------------------------
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Using device: {device}")
 
-    for query in queries:
-        print("\n" + "="*80)
-        print(f" 🔍 Processing Query: {query}")
-        print("="*80)
+# -------------------------------
+# Paths to dataset CSVs
+# -------------------------------
+train_csv = r"C:\Users\bworl\.cache\kagglehub\datasets\datamunge\sign-language-mnist\versions\1\sign_mnist_train.csv"
+test_csv  = r"C:\Users\bworl\.cache\kagglehub\datasets\datamunge\sign-language-mnist\versions\1\sign_mnist_test.csv"
 
-        top_results = semantic_search(df, query)
-        summaries = summarize_papers(top_results)
+# Check if files exist
+if not os.path.isfile(train_csv):
+    raise FileNotFoundError(f"Train CSV not found at {train_csv}")
+if not os.path.isfile(test_csv):
+    raise FileNotFoundError(f"Test CSV not found at {test_csv}")
 
-        results[query] = summaries
+# -------------------------------
+# Load datasets
+# -------------------------------
+train_df = pd.read_csv(train_csv)
+test_df = pd.read_csv(test_csv)
 
-        for summary in summaries:
-            print("\n" + "-"*80)
-            print(summary)
-            print("-"*80)
+# Split off validation set from training
+train_df, valid_df = train_test_split(train_df, test_size=0.1, random_state=42)
 
-    return results
+print(f"Training samples: {len(train_df)}, Validation samples: {len(valid_df)}, Test samples: {len(test_df)}")
 
+# -------------------------------
+# Constants
+# -------------------------------
+IMG_HEIGHT = 28
+IMG_WIDTH  = 28
+IMG_CHS    = 1
+N_CLASSES  = 24
+BATCH_SIZE = 32
 
-def main():
-    # Get the folder where this script lives
-    script_dir = os.path.dirname(os.path.abspath(__file__))
+# -------------------------------
+# Dataset class
+# -------------------------------
+class MyDataset(Dataset):
+    def __init__(self, df):
+        x = df.drop(columns=['label']).values / 255.0
+        x = x.reshape(-1, IMG_CHS, IMG_WIDTH, IMG_HEIGHT)
+        y = df['label'].values
 
-    # Ensure output folder exists relative to script
-    output_dir = os.path.join(script_dir, "output")
-    os.makedirs(output_dir, exist_ok=True)
+        self.xs = torch.tensor(x, dtype=torch.float32).to(device)
+        self.ys = torch.tensor(y, dtype=torch.long).to(device)
 
-    # 🟦 Add / modify queries here
-    queries = [
-        "machine learning",
-        "autonomous agents",
-        "neural architecture search",
-        "reinforcement learning",
-    ]
+    def __getitem__(self, idx):
+        return self.xs[idx], self.ys[idx]
 
-    print("\n=== 🚀 Deep Research Agent — Multi‑Query Mode ===\n")
+    def __len__(self):
+        return len(self.xs)
 
-    results = run_queries(queries)
+# -------------------------------
+# DataLoaders
+# -------------------------------
+train_dataset = MyDataset(train_df)
+train_loader  = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
 
-    # Save output for later
-    output_path = os.path.join(output_dir, "multi_query_results.json")
-    with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(results, f, indent=4, ensure_ascii=False)
+valid_dataset = MyDataset(valid_df)
+valid_loader  = DataLoader(valid_dataset, batch_size=BATCH_SIZE)
 
-    print(f"\n\n📁 Results saved to: {output_path}")
-    print("✨ Done!\n")
+test_dataset = MyDataset(test_df)
+test_loader  = DataLoader(test_dataset, batch_size=BATCH_SIZE)
 
-
-if __name__ == "__main__":
-    main()
+print(f"Train loader batches: {len(train_loader)}, Validation loader batches: {len(valid_loader)}, Test loader batches: {len(test_loader)}")

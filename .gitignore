@@ -1,17 +1,11 @@
-# Virtual environment
+# Ignore virtual environment
+venv/
 .venv/
 
-# Python caches
+# Ignore Python cache
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
 
-# Data outputs
+# Ignore data outputs
 output/
 Data/processed/
-
-# IDE files (VS Code, Sublime, etc.)
-.vscode/
-*.sublime-project
-*.sublime-workspace
