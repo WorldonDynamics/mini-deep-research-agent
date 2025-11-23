@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="360" viewBox="0 0 900 360">
+  <style>
+    .box { fill: #ffffff; stroke: #2b6cb0; stroke-width:1.5; rx:6 }
+    .title { font-family: Arial, Helvetica, sans-serif; font-size: 12px; fill:#1f2937 }
+    .label { font-family: Arial, Helvetica, sans-serif; font-size: 11px; fill:#0b1220 }
+    .arrow { stroke: #2b6cb0; stroke-width: 2; fill:none; marker-end: url(#arrowhead);} 
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#2b6cb0" />
+    </marker>
+  </defs>
+
+  <!-- Data -->
+  <rect class="box" x="20" y="30" width="200" height="70"/>
+  <text x="40" y="56" class="title">Data</text>
+  <text x="40" y="74" class="label">Raw CSV: Data/raw/dummy_papers.csv</text>
+
+  <!-- Utils -->
+  <rect class="box" x="260" y="20" width="260" height="110"/>
+  <text x="290" y="46" class="title">mini-deep-research-agent/src/utils.py</text>
+  <text x="290" y="68" class="label">- load_data()</text>
+  <text x="290" y="86" class="label">- embed_texts() (cache-first)</text>
+  <text x="290" y="104" class="label">- semantic_search(), summarize_papers()</text>
+
+  <!-- Embedding Store -->
+  <rect class="box" x="550" y="30" width="240" height="70"/>
+  <text x="570" y="56" class="title">Embeddings Cache</text>
+  <text x="570" y="74" class="label">Data/processed/embeddings.pkl</text>
+
+  <!-- Arrows -->
+  <path class="arrow" d="M220,65 L260,65"/>
+  <path class="arrow" d="M520,65 L550,65"/>
+
+  <!-- Consumers -->
+  <rect class="box" x="120" y="180" width="260" height="70"/>
+  <text x="150" y="206" class="title">mini-deep-research-agent/src/main.py</text>
+  <text x="150" y="224" class="label">CLI runner — runs queries, writes output/multi_query_results.json</text>
+
+  <rect class="box" x="420" y="180" width="320" height="90"/>
+  <text x="450" y="206" class="title">src/web_app.py (Streamlit)</text>
+  <text x="450" y="224" class="label">Interactive search UI</text>
+  <text x="450" y="240" class="label">Uses utils.semantic_search()</text>
+
+  <path class="arrow" d="M390,200 L420,200"/>
+  <path class="arrow" d="M580,100 L580,180"/>
+
+  <!-- Output/CI -->
+  <rect class="box" x="760" y="230" width="120" height="70"/>
+  <text x="784" y="256" class="title">Output</text>
+  <text x="784" y="274" class="label">output/multi_query_results.json</text>
+
+  <rect class="box" x="20" y="270" width="180" height="70"/>
+  <text x="40" y="296" class="title">CI / Tests</text>
+  <text x="40" y="314" class="label">.github/workflows/ci.yml — pytest</text>
+
+  <path class="arrow" d="M560,210 L800,260"/>
+  <path class="arrow" d="M150,250 L150,270"/>
+
+</svg>
