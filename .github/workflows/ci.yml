@@ -1,118 +1,59 @@
-<<<<<<< HEAD
-name: Deep Research Agent CI
+name: CI
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+  checks: write
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-=======
-name: CI
-
-on:
+    branches: [ main ]
   pull_request:
     paths:
       - '**.py'
       - 'tests/**'
       - '.github/**'
-  push:
->>>>>>> 270e952a2de0a6d81c3475cfc1d86291627884d4
-    branches:
-      - main
+  workflow_dispatch: {}
 
 jobs:
-<<<<<<< HEAD
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.10, 3.11]
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Upgrade pip
-      run: python -m pip install --upgrade pip
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-ci.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-ci.txt
 
-    - name: Run pytest
-      run: |
-        pytest tests/
+      - name: Run tests
+        run: |
+          pytest -q --junitxml=report.xml
 
-    name: CI
-
-    on:
-      push:
-        branches: [ main ]
-      pull_request:
-        paths:
-          - '**.py'
-          - 'tests/**'
-          - '.github/**'
-
-    jobs:
-      test:
-        runs-on: ubuntu-latest
-        strategy:
-          matrix:
-            python-version: [3.10, 3.11]
-
-        steps:
-          - name: Checkout repository
-            uses: actions/checkout@v4
-
-          - name: Set up Python ${{ matrix.python-version }}
-            uses: actions/setup-python@v4
-            with:
-              python-version: ${{ matrix.python-version }}
-
-          - name: Cache pip
-            name: CI
-
-            on:
-              push:
-                branches: [ main ]
-              pull_request:
-                paths:
-                  - '**.py'
-                  - 'tests/**'
-                  - '.github/**'
-
-            jobs:
-              test:
-                runs-on: ubuntu-latest
-                strategy:
-                  matrix:
-                    python-version: [3.10, 3.11]
-
-                steps:
-                  - name: Checkout repository
-                    uses: actions/checkout@v4
-
-                  - name: Set up Python ${{ matrix.python-version }}
-                    uses: actions/setup-python@v4
-                    with:
-                      python-version: ${{ matrix.python-version }}
-
-                  - name: Cache pip
-                    uses: actions/cache@v4
-                    with:
-                      path: ~/.cache/pip
-                      key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-ci.txt') }}
-                      restore-keys: |
-                        ${{ runner.os }}-pip-
-
-                  - name: Install dependencies
-                    run: |
-                      python -m pip install --upgrade pip
-                      pip install -r requirements-ci.txt
-
-                  - name: Run tests
-                    run: |
-                      pytest -q
+      - name: Upload test report
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-report
+          path: report.xml
