@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="220" viewBox="0 0 800 220">
+  <style>
+    .bg { fill: #0b1220; }
+    .text { font-family: 'Courier New', monospace; font-size: 14px; fill: #e6edf3; }
+    .muted { fill: #9fb0c7; font-size:12px }
+  </style>
+  <rect class="bg" x="0" y="0" width="800" height="220" rx="8"/>
+  <text x="20" y="28" class="text">=== 🚀 Deep Research Agent — Multi‑Query Mode ===</text>
+  <text x="20" y="56" class="muted">--------------------------------------------------------------------------------</text>
+  <text x="20" y="80" class="text"> 🔍 Processing Query: machine learning</text>
+  <text x="20" y="104" class="muted">--------------------------------------------------------------------------------</text>
+  <text x="20" y="132" class="text">Title: Deep Learning Basics</text>
+  <text x="20" y="152" class="text">Abstract Preview: An introduction to deep learning concepts....</text>
+  <text x="20" y="172" class="text">Authors: Alice Smith; Bob Jones</text>
+  <text x="20" y="196" class="muted">📁 Results saved to: output/multi_query_results.json</text>
+</svg>

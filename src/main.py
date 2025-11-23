@@ -11,12 +11,12 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
 # -------------------------------
-# Paths to dataset CSVs
+# Dataset paths
 # -------------------------------
 train_csv = r"C:\Users\bworl\.cache\kagglehub\datasets\datamunge\sign-language-mnist\versions\1\sign_mnist_train.csv"
 test_csv  = r"C:\Users\bworl\.cache\kagglehub\datasets\datamunge\sign-language-mnist\versions\1\sign_mnist_test.csv"
 
-# Check if files exist
+# Check existence
 if not os.path.isfile(train_csv):
     raise FileNotFoundError(f"Train CSV not found at {train_csv}")
 if not os.path.isfile(test_csv):
@@ -26,9 +26,9 @@ if not os.path.isfile(test_csv):
 # Load datasets
 # -------------------------------
 train_df = pd.read_csv(train_csv)
-test_df = pd.read_csv(test_csv)
+test_df  = pd.read_csv(test_csv)
 
-# Split off validation set from training
+# Split validation set
 train_df, valid_df = train_test_split(train_df, test_size=0.1, random_state=42)
 
 print(f"Training samples: {len(train_df)}, Validation samples: {len(valid_df)}, Test samples: {len(test_df)}")
