@@ -2,9 +2,7 @@
 import os
 import pickle
 import pandas as pd
-import os
-import pickle
-import pandas as pd
+import numpy as np
 import numpy as np
 
 # Lazy-loaded global model
