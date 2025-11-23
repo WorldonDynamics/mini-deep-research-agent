@@ -1,11 +1,45 @@
-# Ignore virtual environment
-venv/
+# Virtual environments
 .venv/
+venv/
 
-# Ignore Python cache
+# Python caches
 __pycache__/
+.pytest_cache/
+
+# Data and outputs
+Data/processed/
+output/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
 *.pyc
 
-# Ignore data outputs
-output/
-Data/processed/
+# Virtual environment
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+
+# Data and caches
+*.csv
+*.h5
+*.pt
+.kagglehub/
+.cache/
+
+# VSCode
+.vscode/
+
+# Mac/Windows system files
+.DS_Store
+Thumbs.db
